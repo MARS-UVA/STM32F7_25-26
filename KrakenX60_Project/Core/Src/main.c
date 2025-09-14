@@ -133,13 +133,16 @@ int main(void)
   //0003ff is 1024 in twos complement = Mode 1 = Full Power
   //0x00 in the last bit means that the motor is not inverted
 
+  //ID VARIES WITH THE ID OF THE KRAKEN MOTOR
+  //FIRST THREE
   char setTo1[8] = {0x00, 0x03, 0xff, 0x00, 0x00, 0x00, 0x1b, 0x00};
   while (1)
   {
     /* USER CODE END WHILE */
-	  sendCANMessage(&hcan1, 0x2040204, setTo1, 8);
+	  sendGlobalEnableFrame(&hcan1);
+	  sendCANMessage(&hcan1, 0x204023C, setTo1, 8);
 
-
+	  HAL_Delay(10);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
