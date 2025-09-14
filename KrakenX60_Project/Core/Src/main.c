@@ -129,11 +129,15 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  char message1[8] = {0x10, 0x0C, 0xC5, 0x06, 0x0D, 0x00, 0x00, 0x00};
+  //In a 24-bit system / 3-byte system
+  //0003ff is 1024 in twos complement = Mode 1 = Full Power
+  //0x00 in the last bit means that the motor is not inverted
+
+  char setTo1[8] = {0x00, 0x03, 0xff, 0x00, 0x00, 0x00, 0x1b, 0x00};
   while (1)
   {
     /* USER CODE END WHILE */
-	  sendCANMessage(&hcan1, 0x2047c00, message1, 8);
+	  sendCANMessage(&hcan1, 0x2040204, setTo1, 8);
 
 
     /* USER CODE BEGIN 3 */
