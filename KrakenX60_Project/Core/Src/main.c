@@ -148,8 +148,8 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  sendGlobalEnableFrame(&hcan1);
-	  sendCANMessage(&hcan1, 0x2045b40, setTo1, 8);
-	  HAL_Delay(10);
+	  sendCANMessage(&hcan1, 0x2045b40 | 27, setTo1, 8);
+	  HAL_Delay(1);
 	  char * message = "Sending CAN Packets!\r\n";
 
 	  writeDebug(message, strlen(message));
@@ -247,10 +247,23 @@ static void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
-  if (HAL_CAN_Start(&hcan1) != HAL_OK)
-  {
-    Error_Handler();
-  }
+  CAN_FilterTypeDef sf;
+    sf.FilterMaskIdHigh = 0x0000;
+    sf.FilterMaskIdLow = 0x0000;
+    sf.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+    sf.FilterBank = 0;
+    sf.FilterMode = CAN_FILTERMODE_IDMASK;
+    sf.FilterScale = CAN_FILTERSCALE_32BIT;
+    sf.FilterActivation = CAN_FILTER_ENABLE;
+    if (HAL_CAN_ConfigFilter(&hcan1, &sf) != HAL_OK)
+      Error_Handler();
+  //
+    if (HAL_CAN_Start(&hcan1) != HAL_OK)
+      Error_Handler();
+  //
+    if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
+      Error_Handler();
+
   /* USER CODE END CAN1_Init 2 */
 
 }
