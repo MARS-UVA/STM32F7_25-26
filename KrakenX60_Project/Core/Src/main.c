@@ -135,14 +135,14 @@ int main(void)
 
   //ID VARIES WITH THE ID OF THE KRAKEN MOTOR
   //FIRST THREE
-  char setTo1[8] = {0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00};
+  char setTo1[8] = {0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04};
   while (1)
   {
     /* USER CODE END WHILE */
 	  sendGlobalEnableFrame(&hcan1);
-	  sendCANMessage(&hcan1, 0x204b540 | 0x27 , &setTo1, 8);
+	  sendCANMessage(&hcan1, 0x204b540 | 0x1B , setTo1, 8);
 
-	  HAL_Delay(10);
+	  HAL_Delay(1);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
