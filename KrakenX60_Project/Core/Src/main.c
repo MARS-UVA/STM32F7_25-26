@@ -130,6 +130,7 @@ int main(void)
   MX_USB_OTG_FS_PCD_Init();
   MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
+  writeDebug("hi\r\n", 4);
 
   /* USER CODE END 2 */
 
