@@ -19,7 +19,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "string.h"
-#include "can.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -87,6 +86,13 @@ static void MX_CAN1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+void writeDebug(const char *buffer, uint8_t length)
+{
+	HAL_UART_Transmit(&huart3, (uint8_t * ) buffer, length, HAL_MAX_DELAY);
+}
+
+
+
 /* USER CODE END 0 */
 
 /**
@@ -139,11 +145,15 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  sendGlobalEnableFrame(&hcan1);
-	  sendCANMessage(&hcan1, 0x204b540 | 0x1B , setTo1, 8);
 
-	  HAL_Delay(1);
     /* USER CODE BEGIN 3 */
+	  sendGlobalEnableFrame(&hcan1);
+	  sendCANMessage(&hcan1, 0x2045b40, setTo1, 8);
+	  HAL_Delay(10);
+	  char * message = "Sending CAN Packets!\r\n";
+
+	  writeDebug(message, strlen(message));
+
   }
   /* USER CODE END 3 */
 }
