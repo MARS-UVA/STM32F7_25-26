@@ -41,7 +41,8 @@ extern CAN_HandleTypeDef hcan1;
 void MX_CAN1_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void sendCANMessage(CAN_HandleTypeDef *hcan, int identifier, char *message, uint8_t length);
+void sendGlobalEnableFrame(CAN_HandleTypeDef *hcan);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

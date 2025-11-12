@@ -53,10 +53,15 @@ void MX_CAN1_Init(void)
   {
     Error_Handler();
   }
+  if (HAL_CAN_Init(&hcan1) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN CAN1_Init 2 */
-
+  if (HAL_CAN_Start(&hcan1) != HAL_OK) {
+    Error_Handler();
+  }
   /* USER CODE END CAN1_Init 2 */
-
 }
 
 void HAL_CAN_MspInit(CAN_HandleTypeDef* canHandle)
@@ -113,5 +118,47 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
 }
 
 /* USER CODE BEGIN 1 */
+void sendCANMessage(CAN_HandleTypeDef *hcan, int identifier, char *message, uint8_t length)
+{
+  uint32_t mailbox;
+  CAN_TxHeaderTypeDef hdr;
+
+  hdr.IDE = CAN_ID_EXT;         // extended ID (29-bit)
+  hdr.ExtId = (uint32_t)identifier;
+  hdr.RTR = CAN_RTR_DATA;
+  hdr.DLC = length & 0x0F;      // 0..8
+  hdr.TransmitGlobalTime = DISABLE;
+
+  // Wait for a free mailbox (simple busy-wait; fine for now)
+  while (HAL_CAN_GetTxMailboxesFreeLevel(hcan) == 0) {
+    // If you want to be RTOS-friendly, you can add: osDelay(1);
+  }
+
+  if (HAL_CAN_AddTxMessage(hcan, &hdr, (uint8_t *)message, &mailbox) != HAL_OK) {
+    Error_Handler();
+  }
+}
+
+void sendGlobalEnableFrame(CAN_HandleTypeDef *hcan)
+{
+  uint32_t mailbox;
+  CAN_TxHeaderTypeDef hdr;
+
+  hdr.IDE = CAN_ID_EXT;      // extended ID
+  hdr.ExtId = 0x401BF;       // your enable frame ID
+  hdr.RTR = CAN_RTR_DATA;
+  hdr.DLC = 2;
+  hdr.TransmitGlobalTime = DISABLE;
+
+  // Wait for a free mailbox
+  while (HAL_CAN_GetTxMailboxesFreeLevel(hcan) == 0) {
+    // If you want to be RTOS-friendly, you can add: osDelay(1);
+  }
+
+  uint8_t payload[2] = {0x01, 0x00};
+  if (HAL_CAN_AddTxMessage(hcan, &hdr, payload, &mailbox) != HAL_OK) {
+    Error_Handler();
+  }
+}
 
 /* USER CODE END 1 */
