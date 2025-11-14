@@ -30,7 +30,6 @@
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
-typedef StaticQueue_t osStaticMessageQDef_t;
 /* USER CODE BEGIN PTD */
 
 /* USER CODE END PTD */
@@ -69,17 +68,6 @@ const osThreadAttr_t readADCTask_attributes = {
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityBelowNormal,
 };
-/* Definitions for serialQueue */
-osMessageQueueId_t serialQueueHandle;
-uint8_t serialQueueBuffer[ 4 * 8 ];
-osStaticMessageQDef_t serialQueueControlBlock;
-const osMessageQueueAttr_t serialQueue_attributes = {
-  .name = "serialQueue",
-  .cb_mem = &serialQueueControlBlock,
-  .cb_size = sizeof(serialQueueControlBlock),
-  .mq_mem = &serialQueueBuffer,
-  .mq_size = sizeof(serialQueueBuffer)
-};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -113,10 +101,6 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
-
-  /* Create the queue(s) */
-  /* creation of serialQueue */
-  serialQueueHandle = osMessageQueueNew (4, 8, &serialQueue_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */

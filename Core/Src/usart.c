@@ -154,7 +154,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	if (huart->Instance == USART6) {
 		// todo: add logic inside original "HAL_UART_RxCpltCallback" function
-		osMessageQueuePut(serialQueueHandle, rx_dma_buf, 0, 0); // add the received motor commands to a queue, to be read by control thread
+		// acquire a mutex when changing the motorValues struct. Release the mutex after completion
 		HAL_UART_Receive_DMA(huart, rx_dma_buf, sizeof(rx_dma_buf)); // restart receive operation
 	}
 
