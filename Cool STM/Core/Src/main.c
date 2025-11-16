@@ -105,26 +105,10 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  float dec = -1.00;
-	  float a = abs(dec);
 
-	  //max 1024 0x 00 04
-	  //min -1024 0x 00 FC
-	  char init[8] = {0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0xFE, 0x0C};
+	  uint8_t msg[8] = {0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04};
 
-
-	  //speed desired*1024
-	  uint16_t spd = (uint16_t)(1024*a);
-	  if(a > 1){
-		  break;
-	  }
-	  int new_number = ntohl(dec);
-
-
-	  init[7] = (bigE & 0xFF00) >> 8;
-	  init[6] = (bigE & 0xFF);
-
-	  sendCANMessage(&hcan1, 0x204b540 | 60, init, 8);
+	  sendCANMessage(&hcan1, 0x204b540 | 60, (char*)msg, 8);
 	  sendGlobalEnableFrame(&hcan1);
 	  HAL_Delay(10);
   }
